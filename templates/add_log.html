@@ -1,0 +1,49 @@
+{% include 'header.html' %}
+
+{% set username = response.uid %}
+
+{% include 'navbar.html' %}
+
+{% set log_info = response.log_info %}
+{% set tracker_info = response.tracker_info %}
+
+<div class="container w-50 my-5">
+    <p>
+        <span class="h1">Log</span>
+        <span class="h4 text-primary">{{ tracker_info.name }}</span>
+    </p>
+    <div class="jumbotron bg-light">
+        <form id="log-form" onsubmit="upsert_log('{{ tracker_info.id }}', '{{ log_info.id if log_info is not none }}'); return false" method="post">
+            <div class="form-group">
+                <input type="hidden" id="timestamp_val" value="{{ log_info.timestamp if log_info is not none }}"> 
+            </div>
+            <div class="form-group">
+                <label for="timestamp">Timestamp</label>
+                <input class="form-control" type="datetime-local" name="timestamp" id="timestamp" required>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>    
+                {% if tracker_info.tracker_type == 'choices' %}
+                    {% set choice_lst = tracker_info.settings.split(',') %}
+                    <select class="form-control" id="value" name="value" required>
+                        {% for val in choice_lst %}
+                            <option {% if log_info is not none %}{{ 'selected' if log_info.value == val }}{% endif %} value="{{ val }}">{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input class="form-control" type="text" id="value" name="value" value="{{ log_info.value if log_info is not none }}" required>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="note">Notes</label>
+                <textarea class="form-control" name="note" id="note" rows="3" maxlength="120">{{ log_info.note if log_info is not none }}</textarea>
+            </div> 
+            <button type="submit" class="btn btn-primary">Log It</button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/services.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/helpers.js') }}"></script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,51 @@
+{% include 'header.html' %}
+
+{% set username = response.uid %}
+
+{% include 'navbar.html' %}
+
+{% set tracker_info = response.tracker_info %}
+
+<div class="container w-50 my-5">
+    <p>
+        <span class="h1">Tracker</span>
+        <span class="h4 text-primary">{{ tracker_info.name }}</span>
+    </p>
+    <div class="jumbotron bg-light">
+        <h2>Logs</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Timestamp</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Notes</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in tracker_info.logs.all() %}
+                    <tr>
+                        <td>{{ log.timestamp | from_timestamp }}</td>
+                        <td>{{ log.value }}</td>
+                        <td>{{ log.note }}</td>                            
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="/edit_log?tracker_id={{ tracker_info.id }}&log_id={{ log.id }}">Edit</a>
+                                <a class="dropdown-item" href="/remove_log?tracker_id={{ tracker_info.id }}&log_id={{ log.id }}">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/helpers.js') }}"></script>
+
+{% include 'footer.html' %}

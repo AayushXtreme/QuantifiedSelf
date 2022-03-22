@@ -1,0 +1,42 @@
+{% include 'header.html' %}
+
+{% set username = response.uid %}
+
+{% include 'navbar.html' %}
+
+{% set tracker_info = response.tracker_info %}
+
+<div class="container w-50 my-5">
+    <h2>{{ 'Add Tracker' if tracker_info is none else 'Edit Tracker'}}</h2>
+    <div class="jumbotron bg-light">
+        <form id="tracker-form" onsubmit="upsert_tracker('{{ tracker_info.id if tracker_info is not none }}'); return false" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Enter name of tracker" maxlength="20" value="{{ '' if tracker_info is none else tracker_info.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Description</label>
+                <textarea class="form-control" name="description" id="description" rows="3" maxlength="120">{{ '' if tracker_info is none else tracker_info.description }}</textarea>
+            </div>  
+            <div class="form-group">
+                <label for="tracker_type">Tracker Type</label>
+                <select class="form-control" id="tracker_type" name="tracker_type" onchange="add_choices()" required>
+                    <option {% if tracker_info is not none %}{{ 'selected' if tracker_info.tracker_type == 'numerical' }}{% endif %} value="numerical">Numerical</option>
+                    <option {% if tracker_info is not none %}{{ 'selected' if tracker_info.tracker_type == 'choices' }}{% endif %} value="choices">Multiple Choice</option>
+                    <option {% if tracker_info is not none %}{{ 'selected' if tracker_info.tracker_type == 'time' }}{% endif %} value="time">Time Duration</option>
+                    <option {% if tracker_info is not none %}{{ 'selected' if tracker_info.tracker_type == 'bool' }}{% endif %} value="bool">Boolean</option>
+                </select>
+            </div>
+            <div class="form-group d-none" id="choices_grp">
+                <label for="settings">Choices</label>
+                <input type="text" id="settings" name="settings" class="form-control" placeholder="Add choices eg: option1,option2,option3" pattern="(\w+)(,\w+)*" value="{{ tracker_info.settings if (tracker_info is not none) and (tracker_info.settings is not none) }}">
+            </div>
+            <button type="submit" class="btn btn-primary">{{ 'Add tracker' if tracker_info is none else 'Edit tracker'}}</button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/services.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/helpers.js') }}"></script>
+
+{% include 'footer.html' %}

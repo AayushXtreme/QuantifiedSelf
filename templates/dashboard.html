@@ -1,0 +1,48 @@
+{% include 'header.html' %}
+
+{% set username = response.uid %}
+
+{% include 'navbar.html' %}
+
+<div class="container w-50 my-5">
+    <div class="jumbotron bg-light">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Tracker</th>
+                    <th scope="col">Last Tracked</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tracker in response.trackers %}
+                    <tr>
+                        <td><a href="/tracker_info?tracker_id={{ tracker.id }}">{{ tracker.name }}</a></td>
+                        <td>{% if tracker.last_tracked %} {{ tracker.last_tracked | from_timestamp }} {% endif %}</td>
+                        <td><a href="/create_log?tracker_id={{ tracker.id }}"><i class="bi bi-plus fa-10x" style="width: 50%;"></i>log</a></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <a class="dropdown-item" href="/edit_tracker?tracker_id={{ tracker.id }}">Edit</a>
+                                  <a class="dropdown-item" href="/remove_tracker?tracker_id={{ tracker.id }}">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/create_tracker'">
+                Add 
+                <i class="bi bi-plus fa-lg"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}

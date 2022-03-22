@@ -1,0 +1,21 @@
+{% include 'header.html' %}
+    <div class="container w-50">
+        <h1>Quantified Self</h1>
+        <p>Track and measure yourself</p>
+        <div class="jumbotron">
+            <h1>Login</h1>
+            <form id="login-form" class="justify-content-center" onsubmit="login(); return false", method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" maxlength="20" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password (Optional)</label>
+                    <input type="password" class="form-control" name="password" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/services.js') }}"></script>
+{% include 'footer.html' %}
